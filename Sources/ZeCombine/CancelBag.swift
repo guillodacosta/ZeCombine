@@ -4,17 +4,17 @@
 
 import Combine
 
-final class CancelBag {
+public final class CancelBag {
     fileprivate(set) var subscriptions = Set<AnyCancellable>()
     
-    func cancel() {
+    public func cancel() {
         subscriptions.removeAll()
     }
 }
 
-extension AnyCancellable {
+public extension AnyCancellable {
     
-    func store(in cancelBag: CancelBag) {
+    public func store(in cancelBag: CancelBag) {
         cancelBag.subscriptions.insert(self)
     }
 }

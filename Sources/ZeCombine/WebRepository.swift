@@ -12,7 +12,7 @@ protocol WebRepository {
 }
 
 extension WebRepository {
-    func call<Value>(endpoint: APICall, httpCodes: HTTPCodes = .success) -> AnyPublisher<Value, Error>
+    public func call<Value>(endpoint: APICall, httpCodes: HTTPCodes = .success) -> AnyPublisher<Value, Error>
         where Value: Decodable {
         do {
             let request = try endpoint.urlRequest(baseURL: baseURL)
@@ -26,7 +26,7 @@ extension WebRepository {
 }
 
 extension Publisher where Output == URLSession.DataTaskPublisher.Output {
-    func requestData(httpCodes: HTTPCodes = .success) -> AnyPublisher<Data, Error> {
+    public func requestData(httpCodes: HTTPCodes = .success) -> AnyPublisher<Data, Error> {
         tryMap {
                 assert(!Thread.isMainThread)
                 guard let code = ($0.1 as? HTTPURLResponse)?.statusCode else {

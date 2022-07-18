@@ -4,10 +4,10 @@
 
 import Foundation
 
-typealias HTTPCode = Int
-typealias HTTPCodes = Range<HTTPCode>
+public typealias HTTPCode = Int
+public typealias HTTPCodes = Range<HTTPCode>
 
-protocol APICall {
+public protocol APICall {
     var headers: [String: String]? { get }
     var method: String { get }
     var path: String { get }
@@ -15,7 +15,7 @@ protocol APICall {
     func body() throws -> Data?
 }
 
-enum APIError: Swift.Error {
+public enum APIError: Swift.Error {
     case httpCode(HTTPCode)
     case imageDeserialization
     case invalidURL
@@ -23,7 +23,7 @@ enum APIError: Swift.Error {
 }
 
 extension APIError: LocalizedError {
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case let .httpCode(code): return "Unexpected HTTP code: \(code)"
         case .imageDeserialization: return "Cannot deserialize image from Data"
@@ -33,7 +33,7 @@ extension APIError: LocalizedError {
     }
 }
 
-extension APICall {
+public extension APICall {
     func urlRequest(baseURL: String) throws -> URLRequest {
         guard let url = URL(string: baseURL + path) else {
             throw APIError.invalidURL
@@ -46,6 +46,6 @@ extension APICall {
     }
 }
 
-extension HTTPCodes {
+public extension HTTPCodes {
     static let success = 200 ..< 300
 }

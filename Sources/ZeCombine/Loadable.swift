@@ -5,9 +5,9 @@
 import Foundation
 import SwiftUI
 
-typealias LoadableSubject<Value> = Binding<Loadable<Value>>
+public typealias LoadableSubject<Value> = Binding<Loadable<Value>>
 
-enum Loadable<T> {
+public enum Loadable<T> {
 
     case notRequested
     case isLoading(last: T?, cancelBag: CancelBag)
@@ -31,11 +31,11 @@ enum Loadable<T> {
 
 extension Loadable {
     
-    mutating func setIsLoading(cancelBag: CancelBag) {
+    public mutating func setIsLoading(cancelBag: CancelBag) {
         self = .isLoading(last: value, cancelBag: cancelBag)
     }
     
-    mutating func cancelLoading() {
+    public mutating func cancelLoading() {
         switch self {
         case let .isLoading(last, cancelBag):
             cancelBag.cancel()
@@ -51,7 +51,7 @@ extension Loadable {
         }
     }
     
-    func map<V>(_ transform: (T) throws -> V) -> Loadable<V> {
+    public func map<V>(_ transform: (T) throws -> V) -> Loadable<V> {
         do {
             switch self {
             case .notRequested: return .notRequested
@@ -67,7 +67,7 @@ extension Loadable {
     }
 }
 
-protocol SomeOptional {
+public protocol SomeOptional {
     associatedtype Wrapped
     func unwrap() throws -> Wrapped
 }
@@ -79,7 +79,7 @@ struct ValueIsMissingError: Error {
 }
 
 extension Optional: SomeOptional {
-    func unwrap() throws -> Wrapped {
+    public func unwrap() throws -> Wrapped {
         switch self {
         case let .some(value): return value
         case .none: throw ValueIsMissingError()
@@ -88,13 +88,13 @@ extension Optional: SomeOptional {
 }
 
 extension Loadable where T: SomeOptional {
-    func unwrap() -> Loadable<T.Wrapped> {
+    public func unwrap() -> Loadable<T.Wrapped> {
         map { try $0.unwrap() }
     }
 }
 
 extension Loadable: Equatable where T: Equatable {
-    static func == (lhs: Loadable<T>, rhs: Loadable<T>) -> Bool {
+    public static func == (lhs: Loadable<T>, rhs: Loadable<T>) -> Bool {
         var equatable: Bool = false
         switch (lhs, rhs) {
         case (.notRequested, .notRequested):

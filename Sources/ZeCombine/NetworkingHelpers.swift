@@ -6,13 +6,13 @@ import Combine
 import Foundation
 
 extension Just where Output == Void {
-    static func withErrorType<E>(_ errorType: E.Type) -> AnyPublisher<Void, E> {
+    public static func withErrorType<E>(_ errorType: E.Type) -> AnyPublisher<Void, E> {
         withErrorType((), E.self)
     }
 }
 
 extension Just {
-    static func withErrorType<E>(_ value: Output, _ errorType: E.Type) -> AnyPublisher<Output, E> {
+    public static func withErrorType<E>(_ value: Output, _ errorType: E.Type) -> AnyPublisher<Output, E> {
         Just(value)
             .setFailureType(to: E.self)
             .eraseToAnyPublisher()
@@ -21,13 +21,13 @@ extension Just {
 
 extension Publisher {
     
-    func extractUnderlyingError() -> Publishers.MapError<Self, Failure> {
+    public func extractUnderlyingError() -> Publishers.MapError<Self, Failure> {
         mapError {
             ($0.underlyingError as? Failure) ?? $0
         }
     }
     
-    func sinkToLoadable(_ completion: @escaping (Loadable<Output>) -> Void) -> AnyCancellable {
+    public func sinkToLoadable(_ completion: @escaping (Loadable<Output>) -> Void) -> AnyCancellable {
         sink(receiveCompletion: { subscriptionCompletion in
             if let error = subscriptionCompletion.error {
                 completion(.failed(error))
@@ -37,7 +37,7 @@ extension Publisher {
         })
     }
     
-    func sinkToResult(_ result: @escaping (Result<Output, Failure>) -> Void) -> AnyCancellable {
+    public func sinkToResult(_ result: @escaping (Result<Output, Failure>) -> Void) -> AnyCancellable {
         sink(receiveCompletion: { completion in
             switch completion {
             case let .failure(error):
@@ -49,7 +49,7 @@ extension Publisher {
         })
     }
     
-    func ensureTimeSpan(_ interval: TimeInterval) -> AnyPublisher<Output, Failure> {
+    public func ensureTimeSpan(_ interval: TimeInterval) -> AnyPublisher<Output, Failure> {
         let timer = Just<Void>(())
             .delay(for: .seconds(interval), scheduler: RunLoop.main)
             .setFailureType(to: Failure.self)
@@ -60,7 +60,7 @@ extension Publisher {
 }
 
 private extension Error {
-    var underlyingError: Error? {
+    public var underlyingError: Error? {
         let nsError = self as NSError
         if nsError.domain == NSURLErrorDomain && nsError.code == -1009 {
             // "The Internet connection appears to be offline."
@@ -71,7 +71,7 @@ private extension Error {
 }
 
 extension Subscribers.Completion {
-    var error: Failure? {
+    public var error: Failure? {
         switch self {
         case let .failure(error): return error
         default: return nil

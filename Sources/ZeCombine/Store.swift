@@ -5,11 +5,11 @@
 import SwiftUI
 import Combine
 
-typealias Store<State> = CurrentValueSubject<State, Never>
+public typealias Store<State> = CurrentValueSubject<State, Never>
 
 extension Store {
     
-    subscript<T>(keyPath: WritableKeyPath<Output, T>) -> T where T: Equatable {
+    public subscript<T>(keyPath: WritableKeyPath<Output, T>) -> T where T: Equatable {
         get { value[keyPath: keyPath] }
         set {
             var value = self.value
@@ -20,28 +20,28 @@ extension Store {
         }
     }
     
-    func bulkUpdate(_ update: (inout Output) -> Void) {
+    public func bulkUpdate(_ update: (inout Output) -> Void) {
         var value = self.value
         update(&value)
         self.value = value
     }
     
-    func updates<Value>(for keyPath: KeyPath<Output, Value>) -> AnyPublisher<Value, Failure> where Value: Equatable {
+    public func updates<Value>(for keyPath: KeyPath<Output, Value>) -> AnyPublisher<Value, Failure> where Value: Equatable {
         map(keyPath).removeDuplicates().eraseToAnyPublisher()
     }
 }
 
 extension Binding where Value: Equatable {
-    func dispatched<State>(to state: Store<State>,
+    public func dispatched<State>(to state: Store<State>,
                            _ keyPath: WritableKeyPath<State, Value>) -> Self {
         onSet { state[keyPath] = $0 }
     }
 }
 
 extension Binding where Value: Equatable {
-    typealias ValueClosure = (Value) -> Void
+    public typealias ValueClosure = (Value) -> Void
     
-    func onSet(_ perform: @escaping ValueClosure) -> Self {
+    public func onSet(_ perform: @escaping ValueClosure) -> Self {
         .init(get: { () -> Value in
             self.wrappedValue
         }, set: { value in

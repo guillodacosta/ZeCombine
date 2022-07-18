@@ -23,7 +23,7 @@ extension String {
     }
 }
 
-extension Result {
+public extension Result {
     var isSuccess: Bool {
         switch self {
         case .success: return true
@@ -45,7 +45,7 @@ internal final class Inspection<V> {
 
 extension Locale {
     
-    var shortIdentifier: String {
+    public var shortIdentifier: String {
         return String(identifier.prefix(2))
     }
 }

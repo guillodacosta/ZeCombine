@@ -32,8 +32,6 @@ extension Result {
     }
 }
 
-// MARK: - View Inspection helper
-
 internal final class Inspection<V> {
     var callbacks = [UInt: (V) -> Void]()
     let notice = PassthroughSubject<UInt, Never>()
@@ -42,5 +40,12 @@ internal final class Inspection<V> {
         if let callback = callbacks.removeValue(forKey: line) {
             callback(view)
         }
+    }
+}
+
+extension Locale {
+    
+    var shortIdentifier: String {
+        return String(identifier.prefix(2))
     }
 }

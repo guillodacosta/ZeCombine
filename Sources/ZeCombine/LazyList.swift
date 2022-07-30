@@ -40,7 +40,7 @@ public struct LazyList<T> {
         return element
     }
     
-    static var empty: Self {
+    public static var empty: Self {
         .init(count: 0, useCache: false) { index in
             throw Error.elementIsNil(index: index)
         }

@@ -32,7 +32,7 @@ extension Result {
     }
 }
 
-internal final class Inspection<V> {
+public final class Inspection<V> {
     var callbacks = [UInt: (V) -> Void]()
     let notice = PassthroughSubject<UInt, Never>()
     

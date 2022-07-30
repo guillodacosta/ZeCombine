@@ -21,6 +21,11 @@ public enum Loadable<T> {
         default: return nil
         }
     }
+    
+    public var wrappedValue: T? {
+        value
+    }
+    
     var error: Error? {
         switch self {
         case let .failed(error): return error
@@ -51,6 +56,15 @@ extension Loadable {
         }
     }
     
+    public func rawMap<V>(_ transform: (T?) throws -> V) -> V? {
+        do {
+            let val = try transform(value)
+            return val
+        } catch {
+            return nil
+        }
+    }
+    
     public func map<V>(_ transform: (T) throws -> V) -> Loadable<V> {
         do {
             switch self {
@@ -65,6 +79,7 @@ extension Loadable {
             return .failed(error)
         }
     }
+
 }
 
 public protocol SomeOptional {
